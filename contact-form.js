@@ -84,7 +84,7 @@ class ContactForm extends PolymerElement {
             validInputs++;
         }
       });
-      let isValid = inputs.length === validInputs;
+      const isValid = inputs.length === validInputs;
       const ajax = this.shadowRoot.querySelector('iron-ajax');
       let ajaxParams = {};
       if (isValid) {
