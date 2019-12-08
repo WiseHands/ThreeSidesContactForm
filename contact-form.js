@@ -49,16 +49,16 @@ class ContactForm extends PolymerElement {
     `;
   }
     _validate () {
-    let validInputs = 0;
-    const inputs = this.shadowRoot.querySelectorAll('paper-input');
-    inputs.forEach((input) => {
-      input.validate();
-      if (input.inputElement.querySelector('input').validity.valid) {
-          validInputs++;
-          console.log(input.value);
-      }
-    });
-    let isValid = inputs.length === validInputs;
+      let validInputs = 0;
+      const inputs = this.shadowRoot.querySelectorAll('paper-input');
+      inputs.forEach(input => {
+        input.validate();
+        if (input.inputElement.querySelector('input').validity.valid) {
+            validInputs++;
+            console.log(input.value);
+        }
+      });
+      let isValid = inputs.length === validInputs;
     }
 }
 
