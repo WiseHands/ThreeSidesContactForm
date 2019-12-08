@@ -8,6 +8,7 @@
     "@polymer/paper-input": "^3.0.2",
     "@polymer/paper-radio-button": "^3.0.1",
     "@polymer/paper-radio-group": "^3.0.1",
+    "@polymer/paper-spinner": "^3.0.2",
     "@polymer/polymer": "^3.0.0"
   },
   "devDependencies": {
