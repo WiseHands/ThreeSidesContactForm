@@ -5,6 +5,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-card/paper-card.js';
 import '@polymer/paper-spinner/paper-spinner.js';
+import '@polymer/iron-ajax/iron-ajax.js';
 
 class ContactForm extends PolymerElement {
   static get template() {
@@ -26,28 +27,54 @@ class ContactForm extends PolymerElement {
         }
         paper-card {
          width: 100%;
-        }        
+        }   
+        p {
+        margin-left: 1em;
+        }     
       </style>
       <paper-card>
-      <section>
+      <section hidden="[[hideForm]]">
       <h1>Замовлення</h1>
       Оплата: <paper-radio-group id="paymentType" selected="Online">
-        <paper-radio-button name="Online">Онлайн</paper-radio-button>
-        <paper-radio-button name="CashOnDelivery">Накладним платежем</paper-radio-button>
+        <paper-radio-button name="Online" disabled="[[loading]]">Онлайн</paper-radio-button>
+        <paper-radio-button name="CashOnDelivery"  disabled="[[loading]]">Накладним платежем</paper-radio-button>
       </paper-radio-group>
       
-      <paper-input id="nameInput" label="Прізвище, ім'я, по батькові" required error-message="Заповніть, будь ласка, це поле"></paper-input>
-      <paper-input id="phoneInput" label="Номер телефону" pattern="^\\d{7}?$" required error-message="Заповніть, будь ласка, це поле"><span slot="prefix">+380 &nbsp;</span></paper-input>
-      <paper-input id="addressInput" label="Місто" required error-message="Заповніть, будь ласка, це поле"></paper-input>
-      <paper-input id="newPostDepartmentNumberInput" label="Номер відділення Нової Пошти" required error-message="Заповніть, будь ласка, це поле"><span slot="prefix" required>№ &nbsp;</paper-input>
-      <paper-button raised on-click="_validate">ПРОДОВЖИТИ</paper-button>
-      <paper-spinner active></paper-spinner>
+      <paper-input id="fullName" label="Прізвище, ім'я, по батькові" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
+      <paper-input id="phoneNumber" label="Номер телефону" pattern="^\\d{7}?$" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix">+380 &nbsp;</span></paper-input>
+      <paper-input id="address" label="Місто" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
+      <paper-input id="newPostDepartmentNumber" label="Номер відділення Нової Пошти" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix" required>№ &nbsp;</paper-input>
+            <template is="dom-if" if="[[!loading]]"> 
+                 <paper-button raised on-click="_validate">ПРОДОВЖИТИ</paper-button>
+            </template>
+
+      <template is="dom-if" if="[[loading]]">
+        <paper-spinner active></paper-spinner>
+       </template>
 
       </section>
+      <p hidden="[[!showMessage]]">Ваше замовлення прийнято. Невдовзі з вами звяжуться.</p>
       </paper-card>
-
+      <iron-ajax method="POST" url="https://three-sides.com/order-book" handle-as="json" content-type="application/json" on-response="_handleResponse" on-error="_handleError"></iron-ajax>
     `;
   }
+
+    static get properties () {
+        return {
+            loading: {
+                type: Boolean,
+                value: false,
+            },
+            hideForm: {
+                type: Boolean,
+                value: false,
+            },
+            showMessage: {
+              type: Boolean,
+                value: false
+            }
+        };
+    }
     _validate () {
       let validInputs = 0;
       const inputs = this.shadowRoot.querySelectorAll('paper-input');
@@ -55,11 +82,38 @@ class ContactForm extends PolymerElement {
         input.validate();
         if (input.inputElement.querySelector('input').validity.valid) {
             validInputs++;
-            console.log(input.value);
         }
       });
       let isValid = inputs.length === validInputs;
+      const ajax = this.shadowRoot.querySelector('iron-ajax');
+      let ajaxParams = {};
+      if (isValid) {
+          inputs.forEach(input => {
+              ajaxParams[input.id] = input.value;
+          });
+          ajaxParams.paymentType = this.$.paymentType.selected;
+          ajax.params = ajaxParams;
+          this.loading = true;
+          ajax.generateRequest();
+      }
+    }
+
+    _handleResponse () {
+    this.hideForm = true;
+        const isOnlinePayment = this.$.paymentType.selected === 'Online';
+        if (isOnlinePayment) {
+          window.location = 'https://secure.wayforpay.com/button/b0920bb075de9';
+        } else {
+          this.showMessage = true;
+        }
+        this.loading = false;
+
+    }
+
+    _handleError () {
+        this.loading = false;
     }
 }
+
 
 window.customElements.define('contact-form', ContactForm);
