@@ -33,28 +33,27 @@ class ContactForm extends PolymerElement {
         }     
       </style>
       <paper-card>
-          <section hidden="[[hideForm]]">
-             <h1>Замовлення</h1>
-             Оплата: <paper-radio-group id="paymentType" selected="Online">
-                        <paper-radio-button name="Online" disabled="[[loading]]">Онлайн</paper-radio-button>
-                        <paper-radio-button name="CashOnDelivery"  disabled="[[loading]]">Накладним платежем</paper-radio-button>
-                     </paper-radio-group>
-          
-             <paper-input id="fullName" label="Прізвище, ім'я, по батькові" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
-             <paper-input id="phoneNumber" label="Номер телефону" pattern="^\\d{9}?$" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix">+380 &nbsp;</span></paper-input>
-             <paper-input id="address" label="Місто" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
-             <paper-input id="newPostDepartmentNumber" label="Номер відділення Нової Пошти" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix" required>№ &nbsp;</paper-input>
-             
-             <template is="dom-if" if="[[!loading]]"> 
-                     <paper-button raised on-click="_validate">ПРОДОВЖИТИ</paper-button>
-             </template>
-    
-             <template is="dom-if" if="[[loading]]">
-                    <paper-spinner active></paper-spinner>
-             </template>
-    
-          </section>
-            <p hidden="[[!showMessage]]">Ваше замовлення прийнято. Невдовзі з вами звяжуться.</p>
+      <section hidden="[[hideForm]]">
+      <h1>Замовлення</h1>
+      Оплата: <paper-radio-group id="paymentType" selected="Online">
+        <paper-radio-button name="Online" disabled="[[loading]]">Онлайн</paper-radio-button>
+        <paper-radio-button name="CashOnDelivery"  disabled="[[loading]]">Накладним платежем</paper-radio-button>
+      </paper-radio-group>
+      
+      <paper-input id="fullName" label="Прізвище, ім'я, по батькові" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
+      <paper-input id="phoneNumber" label="Номер телефону" pattern="^\\d{7}?$" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix">+380 &nbsp;</span></paper-input>
+      <paper-input id="address" label="Місто" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
+      <paper-input id="newPostDepartmentNumber" label="Номер відділення Нової Пошти" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix" required>№ &nbsp;</paper-input>
+            <template is="dom-if" if="[[!loading]]"> 
+                 <paper-button raised on-click="_validate">ПРОДОВЖИТИ</paper-button>
+            </template>
+
+      <template is="dom-if" if="[[loading]]">
+        <paper-spinner active></paper-spinner>
+       </template>
+
+      </section>
+      <p hidden="[[!showMessage]]">Ваше замовлення прийнято. Невдовзі з вами звяжуться.  <a href="/">Повернутись</a></p>
       </paper-card>
       <iron-ajax method="POST" url="https://three-sides.com/order-book" handle-as="json" content-type="application/json" on-response="_handleResponse" on-error="_handleError"></iron-ajax>
     `;
@@ -76,7 +75,6 @@ class ContactForm extends PolymerElement {
             }
         };
     }
-
     _validate () {
       let validInputs = 0;
       const inputs = this.shadowRoot.querySelectorAll('paper-input');

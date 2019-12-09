@@ -1,8 +1,16 @@
 {
-  "npm": true,
-  "lint": {
-    "rules": [
-      "polymer-3"
-    ]
-  }
+  "entrypoint": "index.html",
+  "shell": "contact-form.js",
+  "sources": [
+    "package.json"
+  ],
+  "extraDependencies": [
+    "node_modules/@webcomponents/webcomponentsjs/bundles/**"
+  ],
+  "builds": [{
+    "bundle": true,
+    "js": {"compile": true, "minify": true},
+    "css": {"minify": true},
+    "html": {"minify": true}
+  }]
 }
