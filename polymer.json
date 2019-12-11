@@ -5,12 +5,21 @@
     "package.json"
   ],
   "extraDependencies": [
+    "node_modules/@webcomponents/webcomponentsjs/*.js",
     "node_modules/@webcomponents/webcomponentsjs/bundles/**"
   ],
   "builds": [{
     "bundle": true,
+    "preset": "es5-bundled",
     "js": {"compile": true, "minify": true},
     "css": {"minify": true},
     "html": {"minify": true}
-  }]
+  }],
+  "moduleResolution": "node",
+  "npm": true,
+  "lint": {
+    "rules": [
+      "polymer-3"
+    ]
+  }
 }

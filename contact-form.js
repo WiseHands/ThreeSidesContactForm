@@ -12,6 +12,8 @@ class ContactForm extends PolymerElement {
     return html`
       <style>
         :host {
+          max-width: 600px;
+          margin: 0 auto;
           display: block;
         }
         section {
@@ -42,7 +44,7 @@ class ContactForm extends PolymerElement {
       
       <paper-input id="fullName" label="Прізвище, ім'я, по батькові" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
       <paper-input id="phoneNumber" label="Номер телефону" pattern="^\\d{9}?$" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix">+380 &nbsp;</span></paper-input>
-      <paper-input id="email" type="email" label="E-mail" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
+      <paper-input id="userEmail" type="email" label="E-mail" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
       <paper-input id="address" label="Місто" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
       <paper-input id="newPostDepartmentNumber" label="Номер відділення Нової Пошти" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix" required>№ &nbsp;</paper-input>
             <template is="dom-if" if="[[!loading]]"> 
