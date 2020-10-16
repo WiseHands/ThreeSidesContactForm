@@ -2,6 +2,7 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-radio-button/paper-radio-button.js';
 import '@polymer/paper-radio-group/paper-radio-group.js';
 import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-input/paper-textarea.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/paper-card/paper-card.js';
 import '@polymer/paper-spinner/paper-spinner.js';
@@ -47,6 +48,7 @@ class ContactForm extends PolymerElement {
       <paper-input id="userEmail" type="email" label="E-mail" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
       <paper-input id="address" label="Місто" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"></paper-input>
       <paper-input id="newPostDepartmentNumber" label="Номер відділення Нової Пошти" required error-message="Заповніть, будь ласка, це поле" disabled="[[loading]]"><span slot="prefix" required>№ &nbsp;</paper-input>
+      <paper-textarea id="comment" label="Коментар" disabled="[[loading]]"></paper-textarea>
             <template is="dom-if" if="[[!loading]]"> 
                  <paper-button raised on-click="_validate">ПРОДОВЖИТИ</paper-button>
             </template>
@@ -81,6 +83,9 @@ class ContactForm extends PolymerElement {
     _validate () {
       let validInputs = 0;
       const inputs = this.shadowRoot.querySelectorAll('paper-input');
+      const comment = this.shadowRoot.querySelector('paper-textarea');
+
+      inputs.values()
       inputs.forEach(input => {
         input.validate();
         if (input.inputElement.querySelector('input').validity.valid) {
@@ -90,10 +95,12 @@ class ContactForm extends PolymerElement {
       const isValid = inputs.length === validInputs;
       const ajax = this.shadowRoot.querySelector('iron-ajax');
       let ajaxParams = {};
+
       if (isValid) {
           inputs.forEach(input => {
               ajaxParams[input.id] = input.value;
           });
+          ajaxParams[comment.id] = comment.value;
           ajaxParams.paymentType = this.$.paymentType.selected;
           ajax.params = ajaxParams;
           this.loading = true;
